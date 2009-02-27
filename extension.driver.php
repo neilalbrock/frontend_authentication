@@ -98,9 +98,17 @@
 		}
 		
 		public function __appendEventXML($context){
+		
+			if(isset($_SESSION[__SYM_COOKIE_PREFIX_ . 'front-end-authentication'])) {
+				$username = $_SESSION[__SYM_COOKIE_PREFIX_ . 'front-end-authentication']['username'];
+			} elseif(isset($_COOKIE[__SYM_COOKIE_PREFIX_ . 'front-end-authentication'])) {
+				$username = $_COOKIE[__SYM_COOKIE_PREFIX_ . 'front-end-authentication']['username'];
+			} else {
+				$username = '';
+			}
 			
 			if(defined('FRONT_END_AUTHENTICATION_SUCCESSFUL')){
-				$context['xml']->appendChild(new XMLElement('front-end-authentication', NULL, array('status' => (FRONT_END_AUTHENTICATION_SUCCESSFUL == true ? 'authenticated' : 'invalid'))));
+				$context['xml']->appendChild(new XMLElement('front-end-authentication', NULL, array('username' => (FRONT_END_AUTHENTICATION_SUCCESSFUL == true ? $username : ''),'status' => (FRONT_END_AUTHENTICATION_SUCCESSFUL == true ? 'authenticated' : 'invalid'))));
 			}
 			
 			elseif(defined('FRONT_END_AUTHENTICATION_EMAIL_SENT')){
